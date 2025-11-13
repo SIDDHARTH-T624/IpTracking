@@ -84,5 +84,15 @@ app.get('/d/:id', (req, res) => {
     if (err) console.error('Download error', err);
   });
 });
+app.get('/logs', (req, res) => {
+  const logFile = path.join(__dirname, 'downloads.csv');
+  if (fs.existsSync(logFile)) {
+    res.download(logFile, 'downloads.csv');
+  } else {
+    res.status(404).send('No log file found yet.');
+  }
+});
+
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
