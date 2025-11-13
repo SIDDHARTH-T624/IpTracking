@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Image Upload — Get Download Link</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+<h1>Upload an image</h1>
+<form id="uploadForm">
+<input type="file" name="image" accept="image/*" required />
+<button type="submit">Upload</button>
+</form>
+
+
+<section id="result" style="display:none">
+<p>Share this link with the downloader:</p>
+<input id="link" readonly style="width:90%" />
+<button id="copy">Copy</button>
+</section>
+</main>
+
+
+<script>
+const form = document.getElementById('uploadForm');
+const result = document.getElementById('result');
+const linkInput = document.getElementById('link');
+const copyBtn = document.getElementById('copy');
+
+
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+const fd = new FormData(form);
+const res = await fetch('/upload', { method: 'POST', body: fd });
+const j = await res.json();
+if (j.downloadUrl) {
+result.style.display = 'block';
+linkInput.value = j.downloadUrl;
+} else {
+alert('Upload failed');
+}
+});
+
+
+copyBtn.addEventListener('click', () => {
+linkInput.select();
+document.execCommand('copy');
+});
+</script>
+</body>
+</html>
